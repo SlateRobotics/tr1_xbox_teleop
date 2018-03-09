@@ -13,6 +13,7 @@
 			/tr1/arm5_to_arm6_joint_effort_controller
 			/tr1/arm6_to_arm7_joint_effort_controller
 			/tr1/arm7_to_arm8_joint_effort_controller
+			/tr1/gripper_joint_effort_controller
 		"/>
 
 	<node pkg="tr1_xbox_controller" name="tr1_xbox_controller_node" type="tr1_xbox_controller_node.py" output="screen" />
