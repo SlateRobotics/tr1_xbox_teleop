@@ -1,5 +1,22 @@
 <launch>
+  <rosparam file="$(find tr1_hardware_interface)/config/hardware.yaml" command="load"/>
+  <rosparam file="$(find tr1_hardware_interface)/config/controllers.yaml" command="load"/>
+
+  <node name="tr1_hardware_interface" pkg="tr1_hardware_interface" type="tr1_hardware_interface_node" output="screen"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
+		args="
+			/tr1/arm1_to_arm2_joint_effort_controller
+			/tr1/arm2_to_arm3_joint_effort_controller
+			/tr1/arm3_to_arm4_joint_effort_controller
+			/tr1/arm4_to_arm5_joint_effort_controller
+			/tr1/arm5_to_arm6_joint_effort_controller
+			/tr1/arm6_to_arm7_joint_effort_controller
+			/tr1/arm7_to_arm8_joint_effort_controller
+		"/>
+
 	<node pkg="tr1_xbox_controller" name="tr1_xbox_controller_node" type="tr1_xbox_controller_node.py" output="screen" />
+
 	<node respawn="true" pkg="joy" type="joy_node" name="tr1_joy" >
 		<param name="dev" type="string" value="/dev/input/js0" />
 		<param name="deadzone" value="0.12" />
