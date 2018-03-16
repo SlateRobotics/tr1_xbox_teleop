@@ -5,14 +5,14 @@ from sensor_msgs.msg import Joy
 from std_msgs.msg import Float64
 
 pubs = []
-pubs.append(rospy.Publisher('/tr1/arm1_to_arm2_joint_effort_controller/command', Float64, queue_size=10))
-pubs.append(rospy.Publisher('/tr1/arm2_to_arm3_joint_effort_controller/command', Float64, queue_size=10))
-pubs.append(rospy.Publisher('/tr1/arm3_to_arm4_joint_effort_controller/command', Float64, queue_size=10))
-pubs.append(rospy.Publisher('/tr1/arm4_to_arm5_joint_effort_controller/command', Float64, queue_size=10))
-pubs.append(rospy.Publisher('/tr1/arm5_to_arm6_joint_effort_controller/command', Float64, queue_size=10))
-pubs.append(rospy.Publisher('/tr1/arm6_to_arm7_joint_effort_controller/command', Float64, queue_size=10))
-pubs.append(rospy.Publisher('/tr1/arm7_to_arm8_joint_effort_controller/command', Float64, queue_size=10))
-pubs.append(rospy.Publisher('/tr1/gripper_joint_effort_controller/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightShoulderPan/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightShoulderTilt/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightUpperArmRoll/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightElbowFlex/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightForearmRoll/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightWristFlex/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightWristRoll/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointRightGripper/command', Float64, queue_size=10))
 
 increment = 0.1
 wristServoValue = 0
@@ -39,38 +39,46 @@ def subGripperServoValue():
 		gripperServoValue = gripperServoValue - increment
 
 def subscriber_callback(data):
+	publishData = []
+
 	if (data.buttons[0] == 1):
-		pubs[0].publish(0)
-		pubs[1].publish(0)
-		pubs[2].publish(0)
-		pubs[3].publish(0)
-		pubs[4].publish(0)
-		pubs[5].publish(0)
-		pubs[6].publish(data.axes[0])
-		pubs[7].publish(data.axes[1])
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(data.axes[0])
+		publishData.append(data.axes[1])
 
 	else:
-		pubs[0].publish(data.axes[0])
-		pubs[1].publish(data.axes[1])
-		pubs[2].publish(data.axes[4])
-		pubs[3].publish(data.axes[3])
+		publishData.append(data.axes[0])
+		publishData.append(data.axes[1])
+		publishData.append(data.axes[3])
+		publishData.append(data.axes[4])
 
 		if (data.buttons[11] == 1):
-			pubs[4].publish(1)
+			publishData.append(1)
 		elif (data.buttons[12] == 1):
-			pubs[4].publish(-1)
+			publishData.append(-1)
 		else:
-			pubs[4].publish(0)
+			publishData.append(0)
 
 		if (data.buttons[13] == 1):
-			pubs[5].publish(1)
+			publishData.append(1)
 		elif (data.buttons[14] == 1):
-			pubs[5].publish(-1)
+			publishData.append(-1)
 		else:
-			pubs[5].publish(0)
+			publishData.append(0)
 
-		pubs[6].publish(wristServoValue)
-		pubs[7].publish(gripperServoValue)
+		publishData.append(wristServoValue)
+		publishData.append(gripperServoValue)
+
+	# rospy.loginfo("Joystick: %f, %f, %f, %f, %f, %f, %f, %f", publishData[0], publishData[1], publishData[2], publishData[3], publishData[4], publishData[5], publishData[6], publishData[7])
+
+	# need to publish data on pubs: pubs[i].publish(publishdata[i])
+	for idx, val in enumerate(publishData):
+		pubs[idx].publish(publishData[idx])
 
 def do_control():
 	rospy.init_node('tr1_xbox_controller', anonymous=True)
