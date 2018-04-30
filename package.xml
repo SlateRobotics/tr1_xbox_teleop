@@ -50,7 +50,9 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>rospy</build_depend>
+  <build_depend>python-numpy</build_depend>
   <build_export_depend>rospy</build_export_depend>
+  <exec_depend>python-numpy</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>joy</exec_depend>
 

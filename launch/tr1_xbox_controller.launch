@@ -5,8 +5,9 @@
   <rosparam file="$(find tr1_hardware_interface)/config/joint_offsets.yaml" command="load"/>
 
   <node name="tr1_hardware_interface" pkg="tr1_hardware_interface" type="tr1_hardware_interface_node" output="screen"/>
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/tr1"
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
 		args="
+			/tr1/controller/state
 			/tr1/controller/effort/JointRightShoulderPan
 			/tr1/controller/effort/JointRightShoulderTilt
 			/tr1/controller/effort/JointRightUpperArmRoll
@@ -15,6 +16,11 @@
 			/tr1/controller/effort/JointRightWristFlex
 			/tr1/controller/effort/JointRightWristRoll
 			/tr1/controller/effort/JointRightGripper
+			/tr1/controller/effort/JointBaseWheelFR
+			/tr1/controller/effort/JointBaseWheelFL
+            /tr1/controller/effort/JointBaseWheelBR
+            /tr1/controller/effort/JointBaseWheelBL
+            /tr1/controller/effort/JointTorsoExtension
 		"/>
 	<node pkg="tr1_xbox_controller" name="tr1_xbox_controller_node" type="tr1_xbox_controller_node.py" output="screen" />
 	<node respawn="true" pkg="joy" type="joy_node" name="tr1_joy" >
