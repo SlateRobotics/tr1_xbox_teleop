@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import rospy
 import sys
 import numpy as np
@@ -21,6 +22,16 @@ pubs.append(rospy.Publisher('/tr1/controller/effort/JointBaseWheelFR/command', F
 pubs.append(rospy.Publisher('/tr1/controller/effort/JointBaseWheelBL/command', Float64, queue_size=10))
 pubs.append(rospy.Publisher('/tr1/controller/effort/JointBaseWheelBR/command', Float64, queue_size=10))
 pubs.append(rospy.Publisher('/tr1/controller/effort/JointTorsoExtension/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/neck_base_to_neck/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/neck_to_head/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftShoulderPan/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftShoulderTilt/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftUpperArmRoll/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftElbowFlex/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftForearmRoll/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftWristFlex/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftWristRoll/command', Float64, queue_size=10))
+pubs.append(rospy.Publisher('/tr1/controller/effort/JointLeftGripper/command', Float64, queue_size=10))
 
 mode = 0 # 0 = right arm, 1 = base
 increment = 0.05
@@ -33,6 +44,12 @@ def changeMode():
 		mode = 1
 		rospy.loginfo("Mode changed to base control")
 	elif (mode == 1):
+		mode = 2
+		rospy.loginfo("Mode changed to left arm control")
+	elif (mode == 2):
+		mode = 3
+		rospy.loginfo("Mode changed to head control")
+	elif (mode == 3):
 		mode = 0
 		rospy.loginfo("Mode changed to right arm control")
 
@@ -66,22 +83,10 @@ def subscriber_callback(data):
 	if (mode == 0):
 		publishData.append(data.axes[0])
 		publishData.append(data.axes[1])
+		publishData.append(data.axes[2])
 		publishData.append(data.axes[3])
-		publishData.append(data.axes[4])
-
-		if (data.buttons[11] == 1):
-			publishData.append(1)
-		elif (data.buttons[12] == 1):
-			publishData.append(-1)
-		else:
-			publishData.append(0)
-
-		if (data.buttons[13] == 1):
-			publishData.append(1)
-		elif (data.buttons[14] == 1):
-			publishData.append(-1)
-		else:
-			publishData.append(0)
+		publishData.append(data.axes[6])
+		publishData.append(data.axes[7])
 
 		if (data.buttons[0] == 1):
 			addWristServoValue()
@@ -102,6 +107,16 @@ def subscriber_callback(data):
 		publishData.append(0)
 		publishData.append(0)
 		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
 	elif (mode == 1):
 		publishData.append(0)   
 		publishData.append(0)
@@ -112,12 +127,83 @@ def subscriber_callback(data):
 		publishData.append(wristServoValue)
 		publishData.append(gripperServoValue)
 		leftStick = (data.axes[0], data.axes[1])
-		rightStickX = data.axes[3]
+		rightStickX = data.axes[2]
 		motorValues = getMotorValues(np.array(leftStick), rightStickX)
 		publishData.append(motorValues[0])
 		publishData.append(motorValues[1] * -1)
 		publishData.append(motorValues[2])
 		publishData.append(motorValues[3] * -1)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+	elif (mode == 2):
+		publishData.append(0)   
+		publishData.append(0)
+		publishData.append(0) 
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(data.axes[0])
+		publishData.append(data.axes[1])
+		publishData.append(data.axes[2])
+		publishData.append(data.axes[3])
+		publishData.append(data.axes[6])
+		publishData.append(data.axes[7])
+
+		if (data.buttons[0] == 1):
+			addWristServoValue()
+
+		if (data.buttons[1] == 1):
+			subWristServoValue()
+
+		if (data.buttons[2] == 1):
+			addGripperServoValue()
+
+		if (data.buttons[3] == 1):
+			subGripperServoValue()
+
+		publishData.append(wristServoValue)
+		publishData.append(gripperServoValue)
+	elif (mode == 3):
+		publishData.append(0)   
+		publishData.append(0)
+		publishData.append(0) 
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(data.axes[0])
+		publishData.append(data.axes[1])
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
+		publishData.append(0)
 		publishData.append(0)
 
 	# rospy.loginfo("Joystick: %f, %f, %f, %f, %f, %f, %f, %f", publishData[0], publishData[1], publishData[2], publishData[3], publishData[4], publishData[5], publishData[6], publishData[7])
