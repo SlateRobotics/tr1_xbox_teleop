@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>tr1_xbox_controller</name>
+  <name>tr1_xbox_teleop</name>
   <version>0.0.0</version>
-  <description>The tr1_xbox_controller package</description>
+  <description>The tr1_xbox_teleop package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

@@ -59,18 +59,42 @@ def changeMode():
 		mode = 1
 		rospy.loginfo("Mode changed to base control")
 		old_time = datetime.datetime.now()
+		zero_joints()
 	elif (mode == 1):
 		mode = 2
 		rospy.loginfo("Mode changed to left arm control")
 		old_time = datetime.datetime.now()
+		zero_joints()
 	elif (mode == 2):
 		mode = 3
 		rospy.loginfo("Mode changed to head control")
 		old_time = datetime.datetime.now()
+		zero_joints()
 	elif (mode == 3):
 		mode = 0
 		rospy.loginfo("Mode changed to right arm control")
 		old_time = datetime.datetime.now()
+		zero_joints()
+
+def zero_joints():
+	pub_JointRightShoulderPan.publish(0)
+	pub_JointRightShoulderTilt.publish(0)
+	pub_JointRightUpperArmRoll.publish(0)
+	pub_JointRightElbowFlex.publish(0)
+	pub_JointRightForearmRoll.publish(0)
+	pub_JointRightWristFlex.publish(0)
+	pub_JointLeftShoulderPan.publish(0)
+	pub_JointLeftShoulderTilt.publish(0)
+	pub_JointLeftUpperArmRoll.publish(0)
+	pub_JointLeftElbowFlex.publish(0)
+	pub_JointLeftForearmRoll.publish(0)
+	pub_JointLeftWristFlex.publish(0)
+	pub_JointBaseWheelFL.publish(0)
+	pub_JointBaseWheelFR.publish(0)
+	pub_JointBaseWheelBL.publish(0)
+	pub_JointBaseWheelBR.publish(0)
+	pub_neck_base_to_neck.publish(0)
+	pub_neck_to_head.publish(0)
 
 ## right arm
 
@@ -129,7 +153,7 @@ def subscriber_callback(data):
 		pub_JointRightUpperArmRoll.publish(data.axes[2])
 		pub_JointRightElbowFlex.publish(data.axes[3])
 		pub_JointRightForearmRoll.publish(data.axes[6])
-		pub_JointRightElbowFlex.publish(data.axes[7])
+		pub_JointRightWristFlex.publish(data.axes[7])
 
 		if (data.buttons[0] == 1):
 			addWristServoValue()
@@ -153,14 +177,14 @@ def subscriber_callback(data):
 		pub_JointBaseWheelFR.publish(motorValues[1] * -1)
 		pub_JointBaseWheelBL.publish(motorValues[2])
 		pub_JointBaseWheelBR.publish(motorValues[3] * -1)
-		pub_JointTorsoExtension.append(data.axes[7])
+		pub_JointTorsoExtension.publish(data.axes[7])
 	elif (mode == 2): #left arm
 		pub_JointLeftShoulderPan.publish(data.axes[0])
 		pub_JointLeftShoulderTilt.publish(data.axes[1])
 		pub_JointLeftUpperArmRoll.publish(data.axes[2])
 		pub_JointLeftElbowFlex.publish(data.axes[3])
 		pub_JointLeftForearmRoll.publish(data.axes[6])
-		pub_JointLeftElbowFlex.publish(data.axes[7])
+		pub_JointLeftWristFlex.publish(data.axes[7])
 
 		if (data.buttons[0] == 1):
 			addWristServoLeftValue()
