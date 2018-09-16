@@ -27,8 +27,8 @@ pub_JointBaseWheelBR = rospy.Publisher('/tr1/controller/effort/JointBaseWheelBR/
 pub_JointTorsoExtension = rospy.Publisher('/tr1/controller/effort/JointTorsoExtension/command', Float64, queue_size=10)
 
 # head
-pub_neck_base_to_neck = rospy.Publisher('/tr1/controller/effort/neck_base_to_neck/command', Float64, queue_size=10)
-pub_neck_to_head = rospy.Publisher('/tr1/controller/effort/neck_to_head/command', Float64, queue_size=10)
+pub_neck_base_to_neck = rospy.Publisher('/tr1/controller/effort/JointHeadTilt/command', Float64, queue_size=10)
+pub_neck_to_head = rospy.Publisher('/tr1/controller/effort/JointHeadPan/command', Float64, queue_size=10)
 
 # left arm
 pub_JointLeftShoulderPan = rospy.Publisher('/tr1/controller/effort/JointLeftShoulderPan/command', Float64, queue_size=10)
