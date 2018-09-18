@@ -27,8 +27,8 @@ pub_JointBaseWheelBR = rospy.Publisher('/tr1/controller/effort/JointBaseWheelBR/
 pub_JointTorsoExtension = rospy.Publisher('/tr1/controller/effort/JointTorsoExtension/command', Float64, queue_size=10)
 
 # head
-pub_neck_base_to_neck = rospy.Publisher('/tr1/controller/effort/JointHeadTilt/command', Float64, queue_size=10)
-pub_neck_to_head = rospy.Publisher('/tr1/controller/effort/JointHeadPan/command', Float64, queue_size=10)
+pub_JointHeadTilt = rospy.Publisher('/tr1/controller/effort/JointHeadTilt/command', Float64, queue_size=10)
+pub_JointHeadPan = rospy.Publisher('/tr1/controller/effort/JointHeadPan/command', Float64, queue_size=10)
 
 # left arm
 pub_JointLeftShoulderPan = rospy.Publisher('/tr1/controller/effort/JointLeftShoulderPan/command', Float64, queue_size=10)
@@ -93,8 +93,8 @@ def zero_joints():
 	pub_JointBaseWheelFR.publish(0)
 	pub_JointBaseWheelBL.publish(0)
 	pub_JointBaseWheelBR.publish(0)
-	pub_neck_base_to_neck.publish(0)
-	pub_neck_to_head.publish(0)
+	pub_JointHeadPan.publish(0)
+	pub_JointHeadTilt.publish(0)
 
 ## right arm
 
@@ -201,8 +201,8 @@ def subscriber_callback(data):
 		pub_JointLeftWristRoll.publish(wristServoLeftValue)
 		pub_JointLeftGripper.publish(gripperServoLeftValue)
 	elif (mode == 3):
-		pub_neck_base_to_neck.publish(data.axes[0])
-		pub_neck_to_head.publish(data.axes[1])
+		pub_JointHeadPan.publish(data.axes[0])
+		pub_JointHeadTilt.publish(data.axes[1])
 
 # input: numpy array, -1 to 1 value
 def getMotorValues(desiredVector, rotationStrength):
